@@ -1,6 +1,22 @@
 // Popup script for Chrome Extension
 // Gets the current tab URL and displays it in the popup
 
+// DOM Elements
+const btnAdd = document.getElementById('btn-add');
+const noSelection = document.getElementById('noSelection');
+const promptContent = document.getElementById('prompt-content');
+const inputTitle = document.getElementById('input-title');
+const pencilIcon = document.getElementById('pencil-icon');
+const inputUrl = document.getElementById('input-url');
+const inputPrompt = document.getElementById('input-prompt');
+const inputTarget = document.getElementById('input-target');
+const btnDelete = document.getElementById('btn-delete');
+const btnDuplicate = document.getElementById('btn-duplicate');
+const btnCancel = document.getElementById('btn-cancel');
+const btnSave = document.getElementById('btn-save');
+const currentUrl = document.getElementById('currentUrl');
+const sidebarContent = document.getElementById('sidebar-content');
+
 function getPromptinJsonDB() {
   return JSON.parse(localStorage.getItem("promptinJsonDB"));
 }
@@ -23,13 +39,18 @@ function getTabURL() {
   });
 }
 
+
 var selectedPrompt = -1;
 
-if (getPromptByUrl(getTabURL()) !== undefined || getTabURL().includes(getPromptByDomain(getTabURL()).url)) {
+if (getPromptByUrl(getTabURL()) !== undefined) {
   console.log(getPromptByUrl(getTabURL()).prompt);
+  promptContent.classList.remove('displayNone');
+  noSelection.classList.add('displayNone');
   selectedPrompt = getPromptByUrl(getTabURL());
 } else {
   console.log("No prompt found");
+  promptContent.classList.add('displayNone');
+  noSelection.classList.remove('displayNone');
   selectedPrompt = -1;
 }
 
@@ -46,6 +67,49 @@ localStorage.setItem("promptinJsonDB", JSON.stringify([
   ]));
 }
 
+function openPrompt(id) {
+  promptContent.classList.remove('displayNone');
+  noSelection.classList.add('displayNone');
+  inputTitle.value = getPromptById(id).title;
+  inputUrl.value = getPromptById(id).url;
+  inputPrompt.value = getPromptById(id).prompt;
+  inputTarget.value = getPromptById(id).target;
+  selectedPrompt = id;
+  getSidebarContent();
+}
+
+
+function getSidebarContent() {
+  var promptinJsonDB = getPromptinJsonDB();
+  sidebarContent.innerHTML = "";
+  promptinJsonDB.forEach(prompt => {
+    if (prompt.id === selectedPrompt) {
+      sidebarContent.innerHTML += `
+        <div class="prompt-item prompt-item-selected" id="prompt-item-${prompt.id}">
+          <span>${prompt.title}</span>
+        </div>
+      `;
+    } else {
+      sidebarContent.innerHTML += `
+        <div class="prompt-item" id="prompt-item-${prompt.id}" data-prompt-id="${prompt.id}">
+          <span>${prompt.title}</span>
+        </div>
+      `;
+    }
+  });
+  
+  // Add event listeners after HTML is inserted
+  promptinJsonDB.forEach(prompt => {
+    if (prompt.id !== selectedPrompt) {
+      const promptElement = document.getElementById(`prompt-item-${prompt.id}`);
+      if (promptElement) {
+        promptElement.addEventListener('click', () => openPrompt(prompt.id));
+      }
+    }
+  });
+}
+
+getSidebarContent();
 
 function addPrompt(title, url, prompt, target, timestamp) {
   var promptinJsonDB = getPromptinJsonDB();

@@ -35,7 +35,7 @@
 }
 
 .prompt-item:hover{
-    background: #ededed;
+    opacity: 0.8;
     transition: all 0.2s;
 }
 
@@ -43,12 +43,6 @@
     background: #007afd;
     transition: all 0.2s;
 }
-
-.prompt-item-selected span{
-    color: #fff;
-    transition: all 0.2s;
-}
-
 .prompt-item span{
     color: #000;
     font-size: 16px;
@@ -56,5 +50,10 @@
     font-weight: 500;
     line-height: normal;
     letter-spacing: -0.48px;
+    transition: all 0.2s;
+}
+
+.prompt-item-selected span{
+    color: #fff;
     transition: all 0.2s;
 }

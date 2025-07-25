@@ -20,8 +20,8 @@
     letter-spacing: -0.48px;
 }
 
-.thereAreSelection{
-    display: none;
+.displayNone{
+    display: none !important;
 }
 
 .prompt-content{
