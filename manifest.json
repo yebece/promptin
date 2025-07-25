@@ -4,10 +4,10 @@
   "version": "1.0",
   "description": "A Chrome extension that helps you manage your prompts",
   "icons": {
-    "16": "pluginIcon.png",
-    "32": "pluginIcon.png",
-    "48": "pluginIcon.png",
-    "128": "pluginIcon.png"
+    "16": "assets/pluginIcon.png",
+    "32": "assets/pluginIcon.png",
+    "48": "assets/pluginIcon.png",
+    "128": "assets/pluginIcon.png"
   },
   "permissions": [
     "activeTab",
