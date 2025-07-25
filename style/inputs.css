@@ -1,0 +1,150 @@
+
+
+.default-input{
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: radial-gradient(48.85% 50% at 50.35% 100%, #F7F7F7 0%, #FFF 100%);
+    color: #000;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding-left: 10px;
+}
+
+textarea{
+    min-height: 144px;
+    resize: none;
+    padding: 10px;
+}
+
+textarea:focus,
+input:focus,
+select:focus,
+.btn:focus{
+    outline: none;
+}
+
+.input-transparent{
+    border: none;
+    background: transparent;
+    outline: none;
+    color: #000;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.48px;
+}
+
+.input-title{
+    color: rgba(0, 0, 0, 0.25);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.36px;
+}
+
+.input-target{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: #F7F7F7;
+    background-image: url(./down.svg);
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+}
+
+.btn{
+    height: 36px;
+    border-radius: 18px;
+    background: #F7F7F7;
+    border: none;
+    color: #000;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.btn-icon{
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    background: #fff;
+    border: none;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.btn-group{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+.btn-group-left,
+.btn-group-right{
+    display: flex;
+    gap: 6px;
+    flex-direction: row;
+}
+
+#btn-delete{
+    background: #E90000;
+}
+
+#btn-save{
+    background: #007afd;
+}
+
+#btn-add{
+    background: #F7F7F7;
+}
+
+.btn-text{
+    background: #fff;
+    padding-left: 12px;
+    padding-right: 12px;
+    color: rgba(0, 0, 0, 0.25);
+    text-align: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.btn{
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.btn:hover{
+    transform: scale(1.05);
+    transition: all 0.2s;
+}
+
+.btn:active{
+    transform: scale(0.95);
+    transition: all 0.2s;
+}
+
+.btn-disabled{
+    opacity: 0.5;
+    cursor: default;
+}
+
+.btn-disabled:hover{
+    transform: none;
+}
+
+.btn-disabled:active{
+    transform: none;
+}

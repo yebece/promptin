@@ -3,17 +3,23 @@
   "name": "Promptin",
   "version": "1.0",
   "description": "A Chrome extension that helps you manage your prompts",
+  "icons": {
+    "16": "pluginIcon.png",
+    "32": "pluginIcon.png",
+    "48": "pluginIcon.png",
+    "128": "pluginIcon.png"
+  },
   "permissions": [
     "activeTab"
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "URL Tracker Extension"
+    "default_title": "Promptin"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["script/content.js"]
     }
   ]
 } 
