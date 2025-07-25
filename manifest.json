@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "URL Tracker Extension",
+  "name": "Promptin",
   "version": "1.0",
-  "description": "A blank Chrome extension template that gets the current page URL",
+  "description": "A Chrome extension that helps you manage your prompts",
   "permissions": [
     "activeTab"
   ],
