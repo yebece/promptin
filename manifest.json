@@ -10,8 +10,12 @@
     "128": "pluginIcon.png"
   },
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
+  "background": {
+    "service_worker": "script/background.js"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_title": "Promptin"
