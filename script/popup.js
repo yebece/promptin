@@ -17,12 +17,14 @@ const btnSave = document.getElementById('btn-save');
 const currentUrl = document.getElementById('currentUrl');
 const sidebarContent = document.getElementById('sidebar-content');
 
+
+
 function getPromptinJsonDB() {
   return JSON.parse(localStorage.getItem("promptinJsonDB"));
 }
 
 function getPromptById(id) {
-  return getPromptinJsonDB()[id];
+  return getPromptinJsonDB().find(prompt => prompt.id === id);
 }
 
 function getPromptByUrl(url) {
@@ -33,26 +35,36 @@ function getPromptByDomain(domain) {
   return getPromptinJsonDB().find(prompt => prompt.url.includes(domain));
 }
 
-function getTabURL() {
-  return chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    return tabs[0].url;
-  });
-}
-
-
 var selectedPrompt = -1;
 
-if (getPromptByUrl(getTabURL()) !== undefined) {
-  console.log(getPromptByUrl(getTabURL()).prompt);
-  promptContent.classList.remove('displayNone');
-  noSelection.classList.add('displayNone');
-  selectedPrompt = getPromptByUrl(getTabURL());
-} else {
-  console.log("No prompt found");
-  promptContent.classList.add('displayNone');
-  noSelection.classList.remove('displayNone');
-  selectedPrompt = -1;
-}
+// Initialize the popup when it loads
+chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+  const currentUrl = tabs[0].url;
+  const foundPrompt = getPromptByUrl(currentUrl);
+  
+  if (foundPrompt !== undefined) {
+    console.log(foundPrompt.prompt);
+    promptContent.classList.remove('displayNone');
+    noSelection.classList.add('displayNone');
+    selectedPrompt = foundPrompt.id;
+    
+    // Load the prompt data into the form
+    inputTitle.value = foundPrompt.title;
+    inputUrl.value = foundPrompt.url;
+    inputPrompt.value = foundPrompt.prompt;
+    inputTarget.value = foundPrompt.target;
+    
+    // Check for changes after setting values (should be disabled initially)
+    checkForChanges();
+  } else {
+    console.log("No prompt found");
+    promptContent.classList.add('displayNone');
+    noSelection.classList.remove('displayNone');
+    selectedPrompt = -1;
+  }
+  
+  getSidebarContent();
+});
 
 if (getPromptinJsonDB() === null) {
 localStorage.setItem("promptinJsonDB", JSON.stringify([
@@ -66,50 +78,6 @@ localStorage.setItem("promptinJsonDB", JSON.stringify([
     },
   ]));
 }
-
-function openPrompt(id) {
-  promptContent.classList.remove('displayNone');
-  noSelection.classList.add('displayNone');
-  inputTitle.value = getPromptById(id).title;
-  inputUrl.value = getPromptById(id).url;
-  inputPrompt.value = getPromptById(id).prompt;
-  inputTarget.value = getPromptById(id).target;
-  selectedPrompt = id;
-  getSidebarContent();
-}
-
-
-function getSidebarContent() {
-  var promptinJsonDB = getPromptinJsonDB();
-  sidebarContent.innerHTML = "";
-  promptinJsonDB.forEach(prompt => {
-    if (prompt.id === selectedPrompt) {
-      sidebarContent.innerHTML += `
-        <div class="prompt-item prompt-item-selected" id="prompt-item-${prompt.id}">
-          <span>${prompt.title}</span>
-        </div>
-      `;
-    } else {
-      sidebarContent.innerHTML += `
-        <div class="prompt-item" id="prompt-item-${prompt.id}" data-prompt-id="${prompt.id}">
-          <span>${prompt.title}</span>
-        </div>
-      `;
-    }
-  });
-  
-  // Add event listeners after HTML is inserted
-  promptinJsonDB.forEach(prompt => {
-    if (prompt.id !== selectedPrompt) {
-      const promptElement = document.getElementById(`prompt-item-${prompt.id}`);
-      if (promptElement) {
-        promptElement.addEventListener('click', () => openPrompt(prompt.id));
-      }
-    }
-  });
-}
-
-getSidebarContent();
 
 function addPrompt(title, url, prompt, target, timestamp) {
   var promptinJsonDB = getPromptinJsonDB();
@@ -150,14 +118,91 @@ function duplicatePrompt(id) {
   addPrompt(getPromptById(id).title, getPromptById(id).url, getPromptById(id).prompt, getPromptById(id).target, getPromptById(id).timestamp);
 }
 
+// Function to check if inputs have changed and update button states
+function checkForChanges() {
+  if (selectedPrompt === -1) return;
+  
+  var originalPrompt = getPromptById(selectedPrompt);
+  if (!originalPrompt) return;
+  
+  var hasChanges = 
+    inputTitle.value !== originalPrompt.title ||
+    inputUrl.value !== originalPrompt.url ||
+    inputPrompt.value !== originalPrompt.prompt ||
+    parseInt(inputTarget.value) !== originalPrompt.target;
+  
+  if (hasChanges) {
+    btnSave.classList.remove('btn-disabled');
+    btnCancel.classList.remove('btn-disabled');
+    console.log("Changes detected");
+  } else {
+    btnSave.classList.add('btn-disabled');
+    btnCancel.classList.add('btn-disabled');
+    console.log("No changes detected");
+  }
+}
+
+// Add event listeners to input fields
+inputTitle.addEventListener('input', checkForChanges);
+inputUrl.addEventListener('input', checkForChanges);
+inputPrompt.addEventListener('input', checkForChanges);
+inputTarget.addEventListener('change', checkForChanges);
+
+
+function openPrompt(id) {
+  promptContent.classList.remove('displayNone');
+  noSelection.classList.add('displayNone');
+  
+  const prompt = getPromptById(id);
+  inputTitle.value = prompt.title;
+  inputUrl.value = prompt.url;
+  inputPrompt.value = prompt.prompt;
+  inputTarget.value = prompt.target;
+  
+  selectedPrompt = id;
+  
+  // Check for changes after setting values (should be disabled initially)
+  checkForChanges();
+  
+  getSidebarContent();
+}
+
+function getSidebarContent() {
+  var promptinJsonDB = getPromptinJsonDB();
+  sidebarContent.innerHTML = "";
+  promptinJsonDB.forEach(prompt => {
+    if (prompt.id === selectedPrompt) {
+      sidebarContent.innerHTML += `
+        <div class="prompt-item prompt-item-selected" id="prompt-item-${prompt.id}">
+          <span>${prompt.title}</span>
+        </div>
+      `;
+    } else {
+      sidebarContent.innerHTML += `
+        <div class="prompt-item" id="prompt-item-${prompt.id}" data-prompt-id="${prompt.id}">
+          <span>${prompt.title}</span>
+        </div>
+      `;
+    }
+  });
+  
+  // Add event listeners after HTML is inserted
+  promptinJsonDB.forEach(prompt => {
+    if (prompt.id !== selectedPrompt) {
+      const promptElement = document.getElementById(`prompt-item-${prompt.id}`);
+      if (promptElement) {
+        promptElement.addEventListener('click', () => openPrompt(prompt.id));
+      }
+    }
+  });
+}
+
 console.log(getPromptinJsonDB());
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Get the current active tab
+  // Get the current active tab for URL display
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    const currentTab = tabs[0];
-    const currentUrl = currentTab.url;
-    
+    const currentUrl = tabs[0].url;
     // Display the URL in the popup
     document.getElementById('currentUrl').textContent = currentUrl;
   });
