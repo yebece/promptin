@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "URL Tracker Extension",
+  "version": "1.0",
+  "description": "A blank Chrome extension template that gets the current page URL",
+  "permissions": [
+    "activeTab"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "URL Tracker Extension"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+} 
