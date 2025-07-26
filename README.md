@@ -1,5 +1,5 @@
 # Promptin
-An ultra personalized prompt extension for AI browsers.
+An ultra personalized prompt extension for AI browsers. Also an **experiment** for the future of context-aware browsers.
 ![promptinWindow](assets/window.png)
 Promptin is built for AI built-in browsers. You can inject personalized prompts to specific URLs, domains, and all websites you visit. This improves your AI browsing experience as you give more personalized context to your browser. Tested in Dia and Comet for now!
 ## How to Install
